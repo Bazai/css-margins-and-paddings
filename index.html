@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Shower Presentation Engine</title>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="shower/themes/ribbon/styles/screen-16x10.css">
+  <style>
+   .slide h1 {
+     margin-bottom: 34px;
+     color: #585a5e;
+     font: 700 100px/1 PT Sans Narrow,sans-serif;
+   }
+    .code-example {
+    position: relative;
+    }
+    .code-example pre {
+      font-size: 0.5em;
+      width: 70%;
+    }
+    .one-direction img.cover{
+      transform: translate(-50%,-30%) scale(1.5);
+    }
+    .code-example img.place.right {
+      height: 60%;
+      top: calc(50% + 2em);
+      right: 2em;
+    }
+  </style>
+</head>
+<body class="shower list">
+
+	<header class="caption">
+		<h1>Семинар про CSS margins and paddings</h1>
+		<p>По мотивам статьи <a href="https://habrahabr.ru/post/340420/">&laquo;Организация отступов в верстке (margin/padding)&raquo;</a></p>
+	</header>
+
+	<section class="slide">
+		<h1>Как организовать отступы в верстке</h1>
+		<h2>И жить &mdash; не тужить</h2>
+	</section>
+
+	<section class="slide">
+		<h2>Всего четыре правила</h2>
+    <ol>
+      <li>Отступы должны быть однонаправленными </li>
+      <li>Задавать margin только между соседними элементами DOM дерева</li>
+      <li>Не задавать отступы независимым блокам</li>
+      <li>Всегдя обнулять отступы у последнего элемента группы</li>
+    </ol>
+	</section>
+
+	<section class="slide">
+		<h1>Правило №1</h1>
+		<h2>Отступы должны быть однонаправленными </h2>
+    <p>Отступы идут в направлении потока дом дерева</p>
+	</section>
+
+	<section class="slide one-direction">
+		<h2>Только margin-bottom и margin-right</h2>
+		<figure>
+			<img src="pictures/1.png" width="75%">
+		</figure>
+	</section>
+
+	<section class="slide">
+		<h2>Отступ сверху и слева за счет padding</h2>
+		<!-- <figure> -->
+			<img src="pictures/2.png" width="75%">
+			<img src="pictures/3_padding_top.png" width="75%">
+		  <!-- </figure> -->
+	</section>
+
+	<section class="slide">
+		<h1>Правило №2</h1>
+		<h2>Блок не может толкать себя сам</h2>
+    <p>
+      Блок получает какое-то воздействие за счет других блоков.
+    </p>
+	</section>
+
+
+	<section class="slide">
+		<h1>Правило №2.1</h1>
+    <h2>Задавать margin только между <a>соседними</a> элементами DOM дерева</h2>
+    <p>aka</p>
+		<p>Задавать отступ последнему возможному элементу в DOM</p>
+	</section>
+
+	<section class="slide code-example">
+		<h2>Кому ставить margin?</h2>
+		<pre>
+      <code>&lt;section class=&quot;main-section&quot;&gt;</code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;</code>
+      <code>    &lt;div&gt;</code>
+      <code>      &lt;ul&gt;</code>
+      <code>        &lt;li&gt;&lt;a href=&quot;&quot;&gt;Далеко-далеко, за словесными.&lt;/a&gt;&lt;/li&gt; </code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>        &lt;li&gt;...&lt;/li&gt;</code>
+      <code>      &lt;/ul&gt; </code>
+      <code>    &lt;/div&gt; </code>
+      <code>  &lt;/div&gt; </code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;...&lt;/div&gt; </code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;...&lt;/div&gt; </code>
+      <code>&lt;/section&gt;</code>
+		</pre>
+    <img class="place right" src="pictures/4_dom_example.png">
+	</section>
+
+	<section class="slide code-example">
+		<h2>Кому ставить margin?</h2>
+		<pre>
+      <code>&lt;section class=&quot;main-section&quot;&gt;</code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;</code>
+      <code>    &lt;div&gt;</code>
+      <code>      &lt;ul&gt;</code>
+      <code>        &lt;li&gt;&lt;a href=&quot;&quot;&gt;Далеко-далеко, за словесными.&lt;/a&gt;&lt;/li&gt; </code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>      &lt;/ul&gt;</code>
+      <code>    <mark>&lt;/div&gt;<span>    <---Here</span> </mark></code>
+      <code>  &lt;/div&gt; </code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;...&lt;/div&gt; </code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;...&lt;/div&gt; </code>
+      <code>&lt;/section&gt;</code>
+		</pre>
+    <img  class="place right" src="pictures/5_dom_rendered.png">
+	</section>
+
+	<section class="slide code-example">
+		<h2>Кому ставить margin?</h2>
+		<pre id="codeTest">
+      <code>&lt;section class=&quot;main-section&quot;&gt;</code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;</code>
+      <code>    &lt;div&gt;</code>
+      <code>      &lt;ul&gt;</code>
+      <code>        &lt;li&gt;&lt;a href=&quot;&quot;&gt;Далеко-далеко, за словесными.&lt;/a&gt;&lt;/li&gt; </code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>      <mark>&lt;/ul&gt;<span>    <---Here</span></mark> </code>
+      <code>    &lt;/div&gt; </code>
+      <code>  &lt;/div&gt; </code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;...&lt;/div&gt; </code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;...&lt;/div&gt; </code>
+      <code>&lt;/section&gt;</code>
+		</pre>
+    <img  class="place right" src="pictures/5_dom_rendered.png">
+	</section>
+
+	<section class="slide code-example">
+		<h2>Кому ставить margin?</h2>
+		<pre>
+      <code>&lt;section class=&quot;main-section&quot;&gt;</code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;</code>
+      <code>    &lt;div&gt;</code>
+      <code>      &lt;ul&gt;</code>
+      <code>        &lt;li&gt;&lt;a href=&quot;&quot;&gt;Далеко-далеко, за словесными.&lt;/a&gt;&lt;/li&gt; </code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>        <mark>&lt;li&gt;...&lt;/li&gt;<span>    <---Here</span></mark></code>
+      <code>      &lt;/ul&gt; </code>
+      <code>    &lt;/div&gt; </code>
+      <code>  &lt;/div&gt; </code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;...&lt;/div&gt; </code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;...&lt;/div&gt; </code>
+      <code>&lt;/section&gt;</code>
+		</pre>
+    <img  class="place right" src="pictures/5_dom_rendered.png">
+	</section>
+
+	<section class="slide code-example">
+		<h2>Кому ставить margin?</h2>
+		<pre>
+      <code>&lt;section class=&quot;main-section&quot;&gt;</code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;</code>
+      <code>    &lt;div&gt;</code>
+      <code>      &lt;ul&gt;</code>
+      <code>        &lt;li&gt;</code>
+      <code>          <mark>&lt;a href=&quot;&quot;&gt;...&lt;/a&gt;&lt;/li&gt;<span>    <---MARGIN-TOP </span> </mark></code>
+      <code>        &lt;/li&gt;</code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>      &lt;/ul&gt;</code>
+      <code>    &lt;/div&gt;</code>
+      <code>  &lt;/div&gt; </code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;...&lt;/div&gt; </code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;...&lt;/div&gt; </code>
+      <code>&lt;/section&gt;</code>
+		</pre>
+    <img  class="place right" src="pictures/5_dom_rendered.png">
+	</section>
+
+	<section class="slide code-example">
+		<h2>Margin - сюда</h2>
+		<pre>
+      <code>&lt;section class=&quot;main-section&quot;&gt;</code>
+      <code>  <mark>&lt;div class=&quot;main-section__item&quot;&gt;<span>    <---Only HERE </span></mark></code>
+      <code>    &lt;div&gt;</code>
+      <code>      &lt;ul&gt;</code>
+      <code>        &lt;li&gt;</code>
+      <code>          &lt;a href=&quot;&quot;&gt;...&lt;/a&gt;&lt;/li&gt;</code>
+      <code>        &lt;/li&gt;</code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>        &lt;li&gt;...&lt;/li&gt; </code>
+      <code>      &lt;/ul&gt;</code>
+      <code>    &lt;/div&gt;</code>
+      <code>  &lt;/div&gt; </code>
+      <code>  <mark>&lt;div class=&quot;main-section__item&quot;&gt;<span>    <---Only HERE </span></mark></code>
+      <code>  &lt;div class=&quot;main-section__item&quot;&gt;...&lt;/div&gt; </code>
+      <code>&lt;/section&gt;</code>
+		</pre>
+    <img  class="place right" src="pictures/5_dom_rendered.png">
+	</section>
+
+	<section class="slide">
+		<h1>Правило №3</h1>
+		<h2>Не задавать отступы независимым блокам</h2>
+	</section>
+
+	<section class="slide">
+		<h2>А если блоку прям очень надо?</h2>
+    <ul>
+      <li>
+        Наследование через элемент<br />
+        <code>.block__item > .block { margin-right: 10px; }</code>
+      </li>
+      <li>
+        Добавление дополнительного класса<br />
+        <code>.block.block__item { margin-right: 10px; }</code>
+      </li>
+      <li>
+        Обертка (блок только для позиционирования).<br />
+        <code>.block-wrapper > .block { margin-right: 10px; }</code>
+      </li>
+    </ul>
+	</section>
+
+	<section class="slide">
+		<h1>Правило №4</h1>
+		<h2>Всегдя обнулять отступы у последнего элемента группы</h2>
+	</section>
+
+	<section class="slide">
+		<h2>Всегдя обнулять отступы у последнего элемента группы</h2>
+    <pre class="code-example">
+      <code>&lt;ul&gt;</code>
+      <code>  &lt;li&gt;&lt;a href=&quot;&quot;&gt;...&lt;/a&gt;&lt;/li&gt;</code>
+      <code>  &lt;li&gt;&lt;a href=&quot;&quot;&gt;...&lt;/a&gt;&lt;/li&gt;</code>
+      <code>  &lt;li&gt;&lt;a href=&quot;&quot;&gt;...&lt;/a&gt;&lt;/li&gt;</code>
+      <code>  &lt;li&gt;&lt;a href=&quot;&quot;&gt;...&lt;/a&gt;&lt;/li&gt;</code>
+      <code>&lt;/ul&gt;</code>
+      <code>&lt;img src=&quot;&quot; alt=&quot;&quot;&gt;</code>
+    </pre>
+		<figure>
+			<img src="pictures/6_navbar_wrong.jpeg" width="75%">
+			<img src="pictures/6_navbar_right.jpeg" width="75%">
+		</figure>
+    <style>
+      pre.code-example  {
+        font-size: 0.5em;
+      }
+    </style>
+	</section>
+
+	<section class="slide">
+		<h2>Обнулить отступ последнего элемента красиво</h2>
+    <pre>
+      <code>.item:not(:last-child) {</code>
+      <code>  margin-bottom: 20px;</code>
+      <code>}</code>
+    </pre>
+	</section>
+
+	<section class="slide">
+		<h2>Обнулить отступ последнего элемента красиво</h2>
+    <pre>
+      <code>.item + .item {</code>
+      <code>  margin-<mark>top:</mark> 20px;</code>
+      <code>}</code>
+    </pre>
+	</section>
+
+	<!-- <footer class="badge"> -->
+	<!-- 	<a href="https://github.com/shower/shower">Fork me on GitHub</a> -->
+	<!-- </footer> -->
+
+	<div class="progress"></div>
+
+	<script src="shower/shower.min.js"></script>
+</body>
+</html>
